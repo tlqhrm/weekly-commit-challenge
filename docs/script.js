@@ -602,7 +602,7 @@ function displayRanking(filter, page = 1) {
 
     // 랭킹 HTML 생성
     if (pageData.length === 0) {
-        rankingList.innerHTML = '<div class="loading">아직 참여자가 없습니다.</div>';
+        rankingList.innerHTML = '<div class="loading">아직 도전자가 없습니다.</div>';
         return;
     }
 
@@ -697,7 +697,7 @@ function displayCachedRanking(filter, page = 1) {
 
     // 랭킹 HTML 생성
     if (pageData.length === 0) {
-        rankingList.innerHTML = '<div class="loading">아직 참여자가 없습니다.</div>';
+        rankingList.innerHTML = '<div class="loading">아직 도전자가 없습니다.</div>';
         return;
     }
 
