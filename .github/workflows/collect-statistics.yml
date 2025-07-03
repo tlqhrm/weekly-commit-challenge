@@ -78,7 +78,7 @@ jobs:
           }
           
           async function collectStatistics() {
-              console.log('통계 수집 시작...');
+              console.log('통계 수집 시작');
               
               const stats = {
                   lastUpdated: new Date().toISOString(),
@@ -110,7 +110,7 @@ jobs:
                       pushed_at: originalRepo.pushed_at
                   });
                   
-                  console.log(`총 ${allForks.length}개의 레포지토리 발견 (원본 포함)`);
+                  console.log(`총 ${allForks.length}개 레포지토리 발견 (원본 포함)`);
                   
                   // 각 fork의 record.md 확인 (배치 처리)
                   for (let i = 0; i < allForks.length; i += 5) {
@@ -197,7 +197,7 @@ jobs:
                                           };
                                           
                                           if (currentWeekSuccess) stats.weeklySuccessful++;
-                                          console.log(`${fork.owner.login}: record.json 사용 - ${records.length}주 기록`);
+                                          console.log(`${fork.owner.login}: record.json 사용 (${records.length}주 기록)`);
                                       }
                                   }
                               } catch (jsonError) {
@@ -372,14 +372,14 @@ jobs:
                   }
                   
                   // statistics.json 파일로 저장
-                  console.log('statistics.json 파일에 통계 저장 중...');
+                  console.log('statistics.json 파일에 통계 저장 중');
                   
                   // 통계 데이터를 JSON 파일로 저장
                   const jsonData = JSON.stringify(stats, null, 2);
                   fs.writeFileSync('statistics.json', jsonData);
                   console.log('statistics.json 파일 저장 완료');
                   
-                  console.log('통계 수집 및 저장 완료!');
+                  console.log('통계 수집 및 저장 완료');
                   
               } catch (error) {
                   console.error('통계 수집 실패:', error);

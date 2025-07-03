@@ -40,8 +40,8 @@ jobs:
           echo "current_weekday=$CURRENT_WEEKDAY" >> $GITHUB_OUTPUT
           echo "current_time=$CURRENT_TIME_KST" >> $GITHUB_OUTPUT
           
-          echo "📅 현재 시각 (KST): $CURRENT_TIME_KST"
-          echo "📅 현재 요일: $CURRENT_WEEKDAY (1=월요일, 7=일요일)"
+          echo "현재 시각 (KST): $CURRENT_TIME_KST"
+          echo "현재 요일: $CURRENT_WEEKDAY (1=월요일, 7=일요일)"
 
       - name: Calculate current week range
         id: week_range
@@ -75,30 +75,30 @@ jobs:
           echo "week_number=$WEEK_NUMBER" >> $GITHUB_OUTPUT
           echo "year=$YEAR" >> $GITHUB_OUTPUT
           
-          echo "📊 이번 주: $WEEK_START ~ $WEEK_END (${YEAR}년 ${WEEK_NUMBER}주차)"
+          echo "이번 주: $WEEK_START ~ $WEEK_END (${YEAR}년 ${WEEK_NUMBER}주차)"
 
       - name: Initialize Fork user records (early)
         if: github.repository_owner != 'tlqhrm'
         run: |
           USERNAME="${{ github.repository_owner }}"
           
-          echo "🔄 Fork 사용자 ($USERNAME) 감지 - 조기 초기화"
+          echo "Fork 사용자 ($USERNAME) 감지 - 조기 초기화"
           
           # Fork 사용자 초기화 처리
           if [ -f record.json ]; then
             EXISTING_USERNAME=$(cat record.json | jq -r '.username // empty' 2>/dev/null || echo "empty")
             
             if [ "$EXISTING_USERNAME" != "$USERNAME" ] && [ "$EXISTING_USERNAME" != "empty" ]; then
-              echo "⚠️ 다른 사용자($EXISTING_USERNAME)의 기록 발견 - 완전 초기화"
+              echo "WARNING: 다른 사용자($EXISTING_USERNAME)의 기록 발견 - 완전 초기화"
               rm -f record.json record.md
-              echo "✅ 기존 기록 완전 초기화 완료"
+              echo "기존 기록 완전 초기화 완료"
             fi
           fi
           
           # statistics 워크플로우 제거
           if [ -f .github/workflows/collect-statistics.yml ]; then
             rm -f .github/workflows/collect-statistics.yml
-            echo "✅ collect-statistics.yml 워크플로우 제거 완료"
+            echo "collect-statistics.yml 워크플로우 제거 완료"
           fi
 
       - name: Check existing records
@@ -108,7 +108,7 @@ jobs:
           
           # record.json 파일이 있는지 확인
           if [ -f record.json ]; then
-            echo "📋 기존 record.json 발견"
+            echo "기존 record.json 발견"
             
             # 마지막 기록의 주차 정보 추출
             LAST_WEEK_START=$(cat record.json | jq -r '.records[-1].weekStart // empty')
@@ -120,9 +120,9 @@ jobs:
             echo "record_count=$RECORD_COUNT" >> $GITHUB_OUTPUT
             echo "has_records=true" >> $GITHUB_OUTPUT
             
-            echo "📊 기존 기록: $RECORD_COUNT개, 마지막 주: $LAST_WEEK_START ~ $LAST_WEEK_END"
+            echo "기존 기록: $RECORD_COUNT개, 마지막 주: $LAST_WEEK_START ~ $LAST_WEEK_END"
           else
-            echo "📋 기존 기록 없음 - 첫 번째 기록 생성 예정"
+            echo "기존 기록 없음 - 첫 번째 기록 생성 예정"
             echo "last_week_start=" >> $GITHUB_OUTPUT
             echo "last_week_end=" >> $GITHUB_OUTPUT
             echo "record_count=0" >> $GITHUB_OUTPUT
@@ -135,7 +135,7 @@ jobs:
           CURRENT_WEEKDAY="${{ steps.time_info.outputs.current_weekday }}"
           CURRENT_HOUR=$(TZ='Asia/Seoul' date '+%H')
           
-          echo "▶️ 정상 실행 - 스킵 로직 제거"
+          echo "정상 실행 - 스킵 로직 제거"
           echo "should_skip=false" >> $GITHUB_OUTPUT
 
       - name: Check if new record needed
@@ -149,14 +149,14 @@ jobs:
           HAS_RECORDS="${{ steps.existing_records.outputs.has_records }}"
           CURRENT_DATE="${{ steps.time_info.outputs.current_date }}"
           
-          echo "🔍 새 기록 추가 필요성 검사..."
+          echo "새 기록 추가 필요성 검사..."
           echo "현재 주 시작: $CURRENT_WEEK_START"
           echo "마지막 기록 주 시작: $LAST_WEEK_START"
           echo "마지막 기록 주 종료: $LAST_WEEK_END"
           
           # 1. 첫 번째 기록이면 무조건 추가
           if [ "$HAS_RECORDS" = "false" ]; then
-            echo "✅ 첫 번째 기록 - 추가 필요"
+            echo "첫 번째 기록 - 추가 필요"
             echo "should_add=true" >> $GITHUB_OUTPUT
             echo "reason=첫 번째 기록" >> $GITHUB_OUTPUT
             exit 0
@@ -182,11 +182,11 @@ jobs:
           
           # 4. 최종 판단: 새로운 주이고 같은 주 기록이 없을 때만 추가
           if [ "$IS_NEW_WEEK" = true ] && [ "$IS_SAME_WEEK" = false ]; then
-            echo "✅ 새 기록 추가 필요 (새 주: $IS_NEW_WEEK, 같은 주 기록 없음: $([ "$IS_SAME_WEEK" = false ] && echo true || echo false))"
+            echo "새 기록 추가 필요 (새 주: $IS_NEW_WEEK, 같은 주 기록 없음: $([ "$IS_SAME_WEEK" = false ] && echo true || echo false))"
             echo "should_add=true" >> $GITHUB_OUTPUT
             echo "reason=새로운 주 시작" >> $GITHUB_OUTPUT
           else
-            echo "❌ 새 기록 추가 불필요 (새 주: $IS_NEW_WEEK, 같은 주 기록 없음: $([ "$IS_SAME_WEEK" = false ] && echo true || echo false))"
+            echo "새 기록 추가 불필요 (새 주: $IS_NEW_WEEK, 같은 주 기록 없음: $([ "$IS_SAME_WEEK" = false ] && echo true || echo false))"
             echo "should_add=false" >> $GITHUB_OUTPUT
             echo "reason=기존 주 업데이트" >> $GITHUB_OUTPUT
           fi
@@ -203,14 +203,14 @@ jobs:
           WEEK_END="${{ steps.week_range.outputs.week_end }}"
           EXCLUDED_REPOS="weekly-commit-challenge"
           
-          echo "👤 사용자: $USERNAME"
-          echo "📅 조회 기간: $WEEK_START ~ $WEEK_END"
+          echo "사용자: $USERNAME"
+          echo "조회 기간: $WEEK_START ~ $WEEK_END"
           
           # 한국 시간을 UTC로 변환
           SINCE_UTC=$(TZ='UTC' date -d "$WEEK_START 00:00:00 KST" -Iseconds)
           UNTIL_UTC=$(TZ='UTC' date -d "$WEEK_END 23:59:59 KST" -Iseconds)
           
-          echo "🌍 UTC 조회 기간: $SINCE_UTC ~ $UNTIL_UTC"
+          echo "UTC 조회 기간: $SINCE_UTC ~ $UNTIL_UTC"
           
           # GraphQL 쿼리 생성
           cat > query.json << EOF
@@ -226,7 +226,7 @@ jobs:
           
           # GraphQL API 호출 (재시도 로직 포함)
           for i in {1..3}; do
-            echo "📡 GraphQL API 호출 시도 $i/3"
+            echo "GraphQL API 호출 시도 $i/3"
             RESPONSE=$(curl -s -X POST \
               -H "Authorization: bearer $GITHUB_TOKEN" \
               -H "Content-Type: application/json" \
@@ -235,17 +235,17 @@ jobs:
             
             # API 응답 유효성 검사
             if echo "$RESPONSE" | jq -e '.data' >/dev/null 2>&1; then
-              echo "✅ GraphQL API 응답 성공"
-              echo "📡 GraphQL 응답: $RESPONSE"
+              echo "GraphQL API 응답 성공"
+              echo "GraphQL 응답: $RESPONSE"
               break
             elif [ $i -eq 3 ]; then
-              echo "❌ GraphQL API 호출 실패 (3회 시도 후): $RESPONSE"
+              echo "ERROR: GraphQL API 호출 실패 (3회 시도 후): $RESPONSE"
               echo "avatar_url=" >> $GITHUB_OUTPUT
               echo "commit_count=0" >> $GITHUB_OUTPUT
               echo "user_exists=false" >> $GITHUB_OUTPUT
               exit 1
             else
-              echo "⚠️ GraphQL API 호출 실패, 재시도 중... ($RESPONSE)"
+              echo "WARNING: GraphQL API 호출 실패, 재시도 중... ($RESPONSE)"
               sleep 2
             fi
           done
@@ -253,7 +253,7 @@ jobs:
           # 사용자 존재 확인
           USER_EXISTS=$(echo "$RESPONSE" | jq -r '.data.user // null')
           if [ "$USER_EXISTS" = "null" ]; then
-            echo "❌ 사용자 '$USERNAME'을 찾을 수 없습니다"
+            echo "ERROR: 사용자 '$USERNAME'을 찾을 수 없습니다"
             echo "avatar_url=" >> $GITHUB_OUTPUT
             echo "commit_count=0" >> $GITHUB_OUTPUT
             echo "user_exists=false" >> $GITHUB_OUTPUT
@@ -271,8 +271,8 @@ jobs:
             | add // 0
           ')
           
-          echo "👤 아바타 URL: $AVATAR_URL"
-          echo "📊 커밋 수: $COMMIT_COUNT"
+          echo "아바타 URL: $AVATAR_URL"
+          echo "커밋 수: $COMMIT_COUNT"
           
           echo "avatar_url=$AVATAR_URL" >> $GITHUB_OUTPUT
           echo "commit_count=$COMMIT_COUNT" >> $GITHUB_OUTPUT
@@ -281,12 +281,12 @@ jobs:
       - name: Remove duplicates from existing records
         if: steps.skip_check.outputs.should_skip == 'false' && steps.existing_records.outputs.has_records == 'true'
         run: |
-          echo "🧹 기존 기록 중복 제거 및 정규화 중..."
+          echo "기존 기록 중복 제거 및 정규화 중..."
           
           if [ -f record.json ]; then
             # 원본 개수 확인
             ORIGINAL_COUNT=$(cat record.json | jq '.records | length' 2>/dev/null || echo "0")
-            echo "📊 원본 기록 수: $ORIGINAL_COUNT개"
+            echo "원본 기록 수: $ORIGINAL_COUNT개"
             
             # 중복 제거 및 정규화
             CLEANED_RECORDS=$(cat record.json | jq --arg username "${{ github.repository_owner }}" '
@@ -330,14 +330,14 @@ jobs:
             
             # 결과 확인
             CLEANED_COUNT=$(echo "$CLEANED_RECORDS" | jq '.records | length')
-            echo "🔍 정리 후 기록 수: $CLEANED_COUNT개"
+            echo "정리 후 기록 수: $CLEANED_COUNT개"
             
             # 변경사항이 있으면 파일 업데이트
             if [ "$ORIGINAL_COUNT" != "$CLEANED_COUNT" ] || ! echo "$CLEANED_RECORDS" | jq -e '. == '"$(cat record.json)"'' >/dev/null 2>&1; then
               echo "$CLEANED_RECORDS" > record.json
-              echo "✅ 중복 제거 및 정규화 완료: $ORIGINAL_COUNT개 → $CLEANED_COUNT개"
+              echo "중복 제거 및 정규화 완료: $ORIGINAL_COUNT개 → $CLEANED_COUNT개"
             else
-              echo "ℹ️ 변경사항 없음 ($ORIGINAL_COUNT개 유지)"
+              echo "변경사항 없음 ($ORIGINAL_COUNT개 유지)"
             fi
           fi
 
@@ -368,7 +368,7 @@ jobs:
           PERIOD_END=$(TZ='Asia/Seoul' date -d "$WEEK_END" '+%m/%d')
           PERIOD="$PERIOD_START ~ $PERIOD_END"
           
-          echo "📝 기록 업데이트 중..."
+          echo "기록 업데이트 중..."
           echo "사유: $REASON"
           echo "기간: $PERIOD (${YEAR}년 ${WEEK_NUMBER}주차)"
           echo "커밋: $COMMIT_COUNT개 ($STATUS)"
@@ -393,7 +393,7 @@ jobs:
             fi
           fi
           
-          echo "🆔 할당된 ID: $RECORD_ID"
+          echo "할당된 ID: $RECORD_ID"
           
           # 새 기록 데이터 (완전한 구조)
           NEW_RECORD=$(jq -n \
@@ -418,7 +418,7 @@ jobs:
           )
           
           if [ "$SHOULD_ADD" = "true" ]; then
-            echo "🆕 새 기록 추가 모드"
+            echo "새 기록 추가 모드"
             
             # 기존 기록이 있으면 가져오기
             if [ -f record.json ]; then
@@ -431,7 +431,7 @@ jobs:
             UPDATED_RECORDS=$(echo "$EXISTING_RECORDS" | jq ". + [$NEW_RECORD]")
             
           else
-            echo "🔄 기존 기록 업데이트 모드"
+            echo "기존 기록 업데이트 모드"
             
             # 기존 기록에서 현재 주 기록 찾아서 업데이트
             EXISTING_RECORDS=$(cat record.json | jq '.records')
@@ -456,24 +456,24 @@ jobs:
               "lastUpdated": $lastUpdated,
               "records": $records
             }' > record.json; then
-            echo "❌ record.json 생성 실패"
+            echo "ERROR: record.json 생성 실패"
             exit 1
           fi
           
           # JSON 유효성 검사
           if ! jq empty record.json 2>/dev/null; then
-            echo "❌ 생성된 record.json이 유효하지 않음"
+            echo "ERROR: 생성된 record.json이 유효하지 않음"
             exit 1
           fi
           
-          echo "✅ record.json 업데이트 완료"
+          echo "record.json 업데이트 완료"
 
       - name: Update record.md
         if: steps.skip_check.outputs.should_skip == 'false' && (steps.should_add_record.outputs.should_add == 'true' || steps.existing_records.outputs.has_records == 'true')
         run: |
           USERNAME="${{ github.repository_owner }}"
           
-          echo "📝 record.md 업데이트 중..."
+          echo "record.md 업데이트 중..."
           
           # record.md 생성
           cat > record.md << EOF
@@ -488,7 +488,7 @@ jobs:
           # record.json에서 데이터 읽어서 테이블 생성
           cat record.json | jq -r '.records[] | "| \(.id) | \(.period) | \(.week) | \(.commits) | \(.status) |"' >> record.md
           
-          echo "✅ record.md 업데이트 완료"
+          echo "record.md 업데이트 완료"
 
 
       - name: Commit and push changes
@@ -513,9 +513,9 @@ jobs:
             
             git commit -m "📊 ${WEEK_NUMBER}주차 위클리 커밋 챌린지 기록 업데이트 ($REASON) - $CURRENT_TIME"
             
-            echo "🚀 변경사항 푸시 중..."
+            echo "변경사항 푸시 중..."
             git push
-            echo "✅ 기록 업데이트 완료"
+            echo "기록 업데이트 완료"
           else
-            echo "ℹ️ 변경사항이 없어 커밋하지 않습니다"
+            echo "변경사항이 없어 커밋하지 않습니다"
           fi
