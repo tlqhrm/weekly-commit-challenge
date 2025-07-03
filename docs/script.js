@@ -85,7 +85,7 @@ function updateCurrentChallenge() {
         badgeText.textContent = `${year}년 ${weekNumber}주차 (${weekPeriod}) 마감 임박! ⏰`;
         challengeBadge.classList.add('urgent');
     } else {
-        badgeText.textContent = `${year}년 ${weekNumber}주차 (${weekPeriod}) 챌린지 진행중! 💪`;
+        badgeText.textContent = `${year}년 ${weekNumber}주차 (${weekPeriod}) 챌린지 진행중!`;
     }
 
     // 추가 정보 업데이트
@@ -917,7 +917,7 @@ async function fetchUserData(username) {
     let userData = getCachedData(userInfoCacheKey, 5 * 60 * 1000); // 5분
 
     let userExists = false;
-    
+
     if (!userData) {
         try {
             // GitHub 사용자 정보는 API를 사용해야 함 (raw로는 불가능)
@@ -1079,7 +1079,7 @@ async function fetchUserData(username) {
         console.log('사용자는 존재하지만 레포지토리가 없음');
         throw new Error('fork 후 이용해주세요.');
     }
-    
+
     // 사용자도 존재하지 않는 경우 (이미 위에서 처리됨)
     console.log('모든 데이터 소스 실패');
     throw new Error('유저를 찾을 수 없습니다.');
