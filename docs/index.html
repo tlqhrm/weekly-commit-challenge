@@ -59,6 +59,24 @@
     <link rel="stylesheet" href="styles.css?v=1751514416">
 
 
+    <!-- Cache busting redirect script -->
+    <script>
+      // URL에 타임스탬프가 없으면 자동으로 리다이렉트
+      (function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const hasTimestamp = urlParams.has('t');
+        
+        if (!hasTimestamp) {
+          const timestamp = Math.floor(Date.now() / 1000); // Unix timestamp
+          const currentUrl = window.location.href.split('?')[0]; // Remove existing params
+          const newUrl = currentUrl + '?t=' + timestamp;
+          
+          // 리다이렉트 (브라우저 히스토리 남기지 않음)
+          window.location.replace(newUrl);
+        }
+      })();
+    </script>
+
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-HM2ZM33225"></script>
     <script>
