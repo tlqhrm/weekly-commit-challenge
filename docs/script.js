@@ -641,27 +641,23 @@ function displayRanking(filter, page = 1) {
         let statColor = '#c9d1d9';
         switch (filter) {
             case 'streak':
-                const streakIcon = user.currentStreak >= 10 ? '🔥' : user.currentStreak >= 5 ? '⚡' : user.currentStreak >= 1 ? '💪' : '🌱';
                 statColor = user.currentStreak >= 10 ? '#22c55e' : user.currentStreak >= 5 ? '#3b82f6' : user.currentStreak >= 1 ? '#8b5cf6' : '#64748b';
                 const streakPeriod = user.currentStreakStart ? ` <span style="color: #94a3b8; font-size: 0.9em;">(${user.currentStreakStart}~)</span>` : '';
-                mainStat = `${streakIcon} 연속 도전 중: <span style="color: ${statColor}; font-weight: 700;">${user.currentStreak}주</span>${streakPeriod}`;
+                mainStat = `연속 도전 중: <span style="color: ${statColor}; font-weight: 700;">${user.currentStreak}주</span>${streakPeriod}`;
                 break;
             case 'success-rate':
-                const rateIcon = user.successRate >= 90 ? '🏆' : user.successRate >= 70 ? '⭐' : user.successRate >= 50 ? '👍' : '📈';
                 statColor = user.successRate >= 90 ? '#22c55e' : user.successRate >= 70 ? '#3b82f6' : user.successRate >= 50 ? '#f59e0b' : '#ef4444';
                 const successWeeks = Math.round((user.successRate / 100) * user.totalWeeks);
-                mainStat = `${rateIcon} 성공률: <span style="color: ${statColor}; font-weight: 700;">${user.successRate}%</span> <span style="color: #94a3b8; font-size: 0.9em;">(${successWeeks}/${user.totalWeeks}주)</span>`;
+                mainStat = `성공률: <span style="color: ${statColor}; font-weight: 700;">${user.successRate}%</span> <span style="color: #94a3b8; font-size: 0.9em;">(${successWeeks}/${user.totalWeeks}주)</span>`;
                 break;
             case 'max-streak':
-                const maxIcon = (user.maxStreak || 0) >= 20 ? '👑' : (user.maxStreak || 0) >= 10 ? '🎖️' : (user.maxStreak || 0) >= 5 ? '🏅' : '📊';
                 statColor = (user.maxStreak || 0) >= 20 ? '#22c55e' : (user.maxStreak || 0) >= 10 ? '#3b82f6' : (user.maxStreak || 0) >= 5 ? '#8b5cf6' : '#64748b';
                 const maxStreakPeriod = user.maxStreakStart && user.maxStreakEnd ? ` <span style="color: #94a3b8; font-size: 0.9em;">(${user.maxStreakStart}~${user.maxStreakEnd})</span>` : '';
-                mainStat = `${maxIcon} 최고 연속 기록: <span style="color: ${statColor}; font-weight: 700;">${user.maxStreak || 0}주</span>${maxStreakPeriod}`;
+                mainStat = `최고 연속 기록: <span style="color: ${statColor}; font-weight: 700;">${user.maxStreak || 0}주</span>${maxStreakPeriod}`;
                 break;
             case 'commits':
-                const commitIcon = (user.currentWeekCommits || 0) >= 10 ? '🚀' : (user.currentWeekCommits || 0) >= 5 ? '💻' : (user.currentWeekCommits || 0) >= 1 ? '📝' : '💤';
                 statColor = (user.currentWeekCommits || 0) >= 10 ? '#22c55e' : (user.currentWeekCommits || 0) >= 5 ? '#3b82f6' : (user.currentWeekCommits || 0) >= 1 ? '#f59e0b' : '#64748b';
-                mainStat = `${commitIcon} 이번 주 커밋 수: <span style="color: ${statColor}; font-weight: 700;">${user.currentWeekCommits || 0}개</span>`;
+                mainStat = `이번 주 커밋 수: <span style="color: ${statColor}; font-weight: 700;">${user.currentWeekCommits || 0}개</span>`;
                 break;
         }
 
@@ -739,27 +735,23 @@ function displayCachedRanking(filter, page = 1) {
         let statColor = '#c9d1d9';
         switch (filter) {
             case 'streak':
-                const streakIcon = user.currentStreak >= 10 ? '🔥' : user.currentStreak >= 5 ? '⚡' : user.currentStreak >= 1 ? '💪' : '🌱';
                 statColor = user.currentStreak >= 10 ? '#22c55e' : user.currentStreak >= 5 ? '#3b82f6' : user.currentStreak >= 1 ? '#8b5cf6' : '#64748b';
                 const streakPeriod = user.currentStreakStart ? ` <span style="color: #94a3b8; font-size: 0.9em;">(${user.currentStreakStart}~)</span>` : '';
-                mainStat = `${streakIcon} 연속 도전 중: <span style="color: ${statColor}; font-weight: 700;">${user.currentStreak}주</span>${streakPeriod}`;
+                mainStat = `연속 도전 중: <span style="color: ${statColor}; font-weight: 700;">${user.currentStreak}주</span>${streakPeriod}`;
                 break;
             case 'success-rate':
-                const rateIcon = user.successRate >= 90 ? '🏆' : user.successRate >= 70 ? '⭐' : user.successRate >= 50 ? '👍' : '📈';
                 statColor = user.successRate >= 90 ? '#22c55e' : user.successRate >= 70 ? '#3b82f6' : user.successRate >= 50 ? '#f59e0b' : '#ef4444';
                 const successWeeks = Math.round((user.successRate / 100) * user.totalWeeks);
-                mainStat = `${rateIcon} 성공률: <span style="color: ${statColor}; font-weight: 700;">${user.successRate}%</span> <span style="color: #94a3b8; font-size: 0.9em;">(${successWeeks}/${user.totalWeeks}주)</span>`;
+                mainStat = `성공률: <span style="color: ${statColor}; font-weight: 700;">${user.successRate}%</span> <span style="color: #94a3b8; font-size: 0.9em;">(${successWeeks}/${user.totalWeeks}주)</span>`;
                 break;
             case 'max-streak':
-                const maxIcon = (user.maxStreak || 0) >= 20 ? '👑' : (user.maxStreak || 0) >= 10 ? '🎖️' : (user.maxStreak || 0) >= 5 ? '🏅' : '📊';
                 statColor = (user.maxStreak || 0) >= 20 ? '#22c55e' : (user.maxStreak || 0) >= 10 ? '#3b82f6' : (user.maxStreak || 0) >= 5 ? '#8b5cf6' : '#64748b';
                 const maxStreakPeriod = user.maxStreakStart && user.maxStreakEnd ? ` <span style="color: #94a3b8; font-size: 0.9em;">(${user.maxStreakStart}~${user.maxStreakEnd})</span>` : '';
-                mainStat = `${maxIcon} 최고 연속 기록: <span style="color: ${statColor}; font-weight: 700;">${user.maxStreak || 0}주</span>${maxStreakPeriod}`;
+                mainStat = `최고 연속 기록: <span style="color: ${statColor}; font-weight: 700;">${user.maxStreak || 0}주</span>${maxStreakPeriod}`;
                 break;
             case 'commits':
-                const commitIcon = (user.currentWeekCommits || 0) >= 10 ? '🚀' : (user.currentWeekCommits || 0) >= 5 ? '💻' : (user.currentWeekCommits || 0) >= 1 ? '📝' : '💤';
                 statColor = (user.currentWeekCommits || 0) >= 10 ? '#22c55e' : (user.currentWeekCommits || 0) >= 5 ? '#3b82f6' : (user.currentWeekCommits || 0) >= 1 ? '#f59e0b' : '#64748b';
-                mainStat = `${commitIcon} 이번 주 커밋 수: <span style="color: ${statColor}; font-weight: 700;">${user.currentWeekCommits || 0}개</span>`;
+                mainStat = `이번 주 커밋 수: <span style="color: ${statColor}; font-weight: 700;">${user.currentWeekCommits || 0}개</span>`;
                 break;
         }
 
