@@ -204,11 +204,17 @@ function showProfileUI(data) {
             </div>
             <div class="stat-item">
                 <span class="stat-label">연속 도전 중</span>
-                <span class="stat-value">${data.currentStreak}주</span>
+                <span class="stat-value">
+                    ${data.currentStreak}주
+                    ${data.currentStreakStart ? `<br><small style="color: #8b949e; font-size: 0.8em;">${data.currentStreakStart}부터</small>` : ''}
+                </span>
             </div>
             <div class="stat-item">
                 <span class="stat-label">최고 연속 기록</span>
-                <span class="stat-value">${data.maxStreak || data.currentStreak}주</span>
+                <span class="stat-value">
+                    ${data.maxStreak || data.currentStreak}주
+                    ${data.maxStreakStart && data.maxStreakEnd ? `<br><small style="color: #8b949e; font-size: 0.8em;">${data.maxStreakStart}~${data.maxStreakEnd}</small>` : ''}
+                </span>
             </div>
             <div class="stat-item">
                 <span class="stat-label">성공률</span>
@@ -300,6 +306,10 @@ function calculateStats(records) {
             currentWeekCommits: 0,
             currentWeekSuccess: false,
             currentStreak: 0,
+            currentStreakStart: null,
+            maxStreak: 0,
+            maxStreakStart: null,
+            maxStreakEnd: null,
             totalWeeks: 0,
             recentRecords: []
         };
@@ -313,23 +323,37 @@ function calculateStats(records) {
 
     // 연속 성공 주차 계산 (진행중은 제외)
     let currentStreak = 0;
+    let currentStreakStart = null;
     let maxStreak = 0;
+    let maxStreakStart = null;
+    let maxStreakEnd = null;
     let tempStreak = 0;
+    let tempStreakStart = null;
 
     // 현재 연속 주차 계산 (최신부터 역순으로)
     for (let i = records.length - 1; i >= 0; i--) {
         if (records[i].success) {
             currentStreak++;
+            // period에서 시작일 추출 (MM/DD ~ MM/DD 형식)
+            currentStreakStart = records[i].period ? records[i].period.split(' ~ ')[0] : null;
         } else {
             break;
         }
     }
 
     // 최장 연속 주차 계산 (전체 기록에서)
-    for (const record of records) {
+    for (let i = 0; i < records.length; i++) {
+        const record = records[i];
         if (record.success) {
+            if (tempStreak === 0) {
+                tempStreakStart = record.period ? record.period.split(' ~ ')[0] : null;
+            }
             tempStreak++;
-            maxStreak = Math.max(maxStreak, tempStreak);
+            if (tempStreak > maxStreak) {
+                maxStreak = tempStreak;
+                maxStreakStart = tempStreakStart;
+                maxStreakEnd = record.period ? record.period.split(' ~ ')[1] : null;
+            }
         } else {
             tempStreak = 0;
         }
@@ -345,7 +369,10 @@ function calculateStats(records) {
         currentWeekCommits: currentWeekData?.commits || 0,
         currentWeekSuccess: currentWeekData?.success || false,
         currentStreak,
+        currentStreakStart,
         maxStreak,
+        maxStreakStart,
+        maxStreakEnd,
         successRate,
         totalWeeks: records.length,
         recentRecords: records.slice(-10).reverse() // 최근 10개를 최신순으로
@@ -616,7 +643,8 @@ function displayRanking(filter, page = 1) {
             case 'streak':
                 const streakIcon = user.currentStreak >= 10 ? '🔥' : user.currentStreak >= 5 ? '⚡' : user.currentStreak >= 1 ? '💪' : '🌱';
                 statColor = user.currentStreak >= 10 ? '#22c55e' : user.currentStreak >= 5 ? '#3b82f6' : user.currentStreak >= 1 ? '#8b5cf6' : '#64748b';
-                mainStat = `${streakIcon} 연속 도전 중: <span style="color: ${statColor}; font-weight: 700;">${user.currentStreak}주</span>`;
+                const streakPeriod = user.currentStreakStart ? ` <span style="color: #94a3b8; font-size: 0.9em;">(${user.currentStreakStart}~)</span>` : '';
+                mainStat = `${streakIcon} 연속 도전 중: <span style="color: ${statColor}; font-weight: 700;">${user.currentStreak}주</span>${streakPeriod}`;
                 break;
             case 'success-rate':
                 const rateIcon = user.successRate >= 90 ? '🏆' : user.successRate >= 70 ? '⭐' : user.successRate >= 50 ? '👍' : '📈';
@@ -627,7 +655,8 @@ function displayRanking(filter, page = 1) {
             case 'max-streak':
                 const maxIcon = (user.maxStreak || 0) >= 20 ? '👑' : (user.maxStreak || 0) >= 10 ? '🎖️' : (user.maxStreak || 0) >= 5 ? '🏅' : '📊';
                 statColor = (user.maxStreak || 0) >= 20 ? '#22c55e' : (user.maxStreak || 0) >= 10 ? '#3b82f6' : (user.maxStreak || 0) >= 5 ? '#8b5cf6' : '#64748b';
-                mainStat = `${maxIcon} 최고 연속 기록: <span style="color: ${statColor}; font-weight: 700;">${user.maxStreak || 0}주</span>`;
+                const maxStreakPeriod = user.maxStreakStart && user.maxStreakEnd ? ` <span style="color: #94a3b8; font-size: 0.9em;">(${user.maxStreakStart}~${user.maxStreakEnd})</span>` : '';
+                mainStat = `${maxIcon} 최고 연속 기록: <span style="color: ${statColor}; font-weight: 700;">${user.maxStreak || 0}주</span>${maxStreakPeriod}`;
                 break;
             case 'commits':
                 const commitIcon = (user.currentWeekCommits || 0) >= 10 ? '🚀' : (user.currentWeekCommits || 0) >= 5 ? '💻' : (user.currentWeekCommits || 0) >= 1 ? '📝' : '💤';
@@ -712,7 +741,8 @@ function displayCachedRanking(filter, page = 1) {
             case 'streak':
                 const streakIcon = user.currentStreak >= 10 ? '🔥' : user.currentStreak >= 5 ? '⚡' : user.currentStreak >= 1 ? '💪' : '🌱';
                 statColor = user.currentStreak >= 10 ? '#22c55e' : user.currentStreak >= 5 ? '#3b82f6' : user.currentStreak >= 1 ? '#8b5cf6' : '#64748b';
-                mainStat = `${streakIcon} 연속 도전 중: <span style="color: ${statColor}; font-weight: 700;">${user.currentStreak}주</span>`;
+                const streakPeriod = user.currentStreakStart ? ` <span style="color: #94a3b8; font-size: 0.9em;">(${user.currentStreakStart}~)</span>` : '';
+                mainStat = `${streakIcon} 연속 도전 중: <span style="color: ${statColor}; font-weight: 700;">${user.currentStreak}주</span>${streakPeriod}`;
                 break;
             case 'success-rate':
                 const rateIcon = user.successRate >= 90 ? '🏆' : user.successRate >= 70 ? '⭐' : user.successRate >= 50 ? '👍' : '📈';
@@ -723,7 +753,8 @@ function displayCachedRanking(filter, page = 1) {
             case 'max-streak':
                 const maxIcon = (user.maxStreak || 0) >= 20 ? '👑' : (user.maxStreak || 0) >= 10 ? '🎖️' : (user.maxStreak || 0) >= 5 ? '🏅' : '📊';
                 statColor = (user.maxStreak || 0) >= 20 ? '#22c55e' : (user.maxStreak || 0) >= 10 ? '#3b82f6' : (user.maxStreak || 0) >= 5 ? '#8b5cf6' : '#64748b';
-                mainStat = `${maxIcon} 최고 연속 기록: <span style="color: ${statColor}; font-weight: 700;">${user.maxStreak || 0}주</span>`;
+                const maxStreakPeriod = user.maxStreakStart && user.maxStreakEnd ? ` <span style="color: #94a3b8; font-size: 0.9em;">(${user.maxStreakStart}~${user.maxStreakEnd})</span>` : '';
+                mainStat = `${maxIcon} 최고 연속 기록: <span style="color: ${statColor}; font-weight: 700;">${user.maxStreak || 0}주</span>${maxStreakPeriod}`;
                 break;
             case 'commits':
                 const commitIcon = (user.currentWeekCommits || 0) >= 10 ? '🚀' : (user.currentWeekCommits || 0) >= 5 ? '💻' : (user.currentWeekCommits || 0) >= 1 ? '📝' : '💤';
@@ -850,11 +881,17 @@ async function toggleRankingDetail(username, rankIndex) {
                         </div>
                         <div class="detail-stat-item">
                             <span class="detail-stat-label">연속 도전 중</span>
-                            <span class="detail-stat-value">${data.currentStreak}주</span>
+                            <span class="detail-stat-value">
+                                ${data.currentStreak}주
+                                ${data.currentStreakStart ? `<br><small style="color: #8b949e; font-size: 0.8em;">${data.currentStreakStart}부터</small>` : ''}
+                            </span>
                         </div>
                         <div class="detail-stat-item">
                             <span class="detail-stat-label">최고 연속 기록</span>
-                            <span class="detail-stat-value">${data.maxStreak || 0}주</span>
+                            <span class="detail-stat-value">
+                                ${data.maxStreak || 0}주
+                                ${data.maxStreakStart && data.maxStreakEnd ? `<br><small style="color: #8b949e; font-size: 0.8em;">${data.maxStreakStart}~${data.maxStreakEnd}</small>` : ''}
+                            </span>
                         </div>
                         <div class="detail-stat-item">
                             <span class="detail-stat-label">성공률</span>
@@ -1100,31 +1137,47 @@ function calculateStatsFromRecords(records) {
     if (!records || records.length === 0) {
         return {
             currentStreak: 0,
+            currentStreakStart: null,
             maxStreak: 0,
+            maxStreakStart: null,
+            maxStreakEnd: null,
             successRate: 0,
             totalWeeks: 0
         };
     }
 
     let currentStreak = 0;
+    let currentStreakStart = null;
     let maxStreak = 0;
+    let maxStreakStart = null;
+    let maxStreakEnd = null;
     let tempStreak = 0;
+    let tempStreakStart = null;
     let successCount = 0;
 
     // 현재 연속 주차 계산 (최신부터 역순으로)
     for (let i = records.length - 1; i >= 0; i--) {
         if (records[i].success) {
             currentStreak++;
+            currentStreakStart = records[i].weekStart;
         } else {
             break;
         }
     }
 
     // 최장 연속 주차 및 성공률 계산
-    for (const record of records) {
+    for (let i = 0; i < records.length; i++) {
+        const record = records[i];
         if (record.success) {
+            if (tempStreak === 0) {
+                tempStreakStart = record.weekStart;
+            }
             tempStreak++;
-            maxStreak = Math.max(maxStreak, tempStreak);
+            if (tempStreak > maxStreak) {
+                maxStreak = tempStreak;
+                maxStreakStart = tempStreakStart;
+                maxStreakEnd = record.weekEnd;
+            }
             successCount++;
         } else {
             tempStreak = 0;
@@ -1135,7 +1188,10 @@ function calculateStatsFromRecords(records) {
 
     return {
         currentStreak,
+        currentStreakStart,
         maxStreak,
+        maxStreakStart,
+        maxStreakEnd,
         successRate,
         totalWeeks: records.length
     };

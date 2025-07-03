@@ -144,20 +144,33 @@ jobs:
                                           let tempStreak = 0;
                                           let successWeeks = 0;
                                           
-                                          // 최신부터 역순으로 현재 연속 계산
+                                          // 현재 연속 및 기간 계산
+                                          let currentStreakStart = null;
                                           for (let i = records.length - 1; i >= 0; i--) {
                                               if (records[i].success) {
                                                   currentStreak++;
+                                                  currentStreakStart = records[i].weekStart;
                                               } else {
                                                   break;
                                               }
                                           }
                                           
-                                          // 최장 연속 계산
-                                          for (const record of records) {
+                                          // 최장 연속 및 기간 계산
+                                          let maxStreakStart = null;
+                                          let maxStreakEnd = null;
+                                          let tempStreakStart = null;
+                                          for (let i = 0; i < records.length; i++) {
+                                              const record = records[i];
                                               if (record.success) {
+                                                  if (tempStreak === 0) {
+                                                      tempStreakStart = record.weekStart;
+                                                  }
                                                   tempStreak++;
-                                                  maxStreak = Math.max(maxStreak, tempStreak);
+                                                  if (tempStreak > maxStreak) {
+                                                      maxStreak = tempStreak;
+                                                      maxStreakStart = tempStreakStart;
+                                                      maxStreakEnd = record.weekEnd;
+                                                  }
                                                   successWeeks++;
                                               } else {
                                                   tempStreak = 0;
@@ -173,7 +186,10 @@ jobs:
                                               avatarUrl: recordData.avatarUrl || fork.owner.avatar_url,
                                               lastPushed: fork.pushed_at,
                                               currentStreak: currentStreak,
+                                              currentStreakStart: currentStreakStart,
                                               maxStreak: maxStreak,
+                                              maxStreakStart: maxStreakStart,
+                                              maxStreakEnd: maxStreakEnd,
                                               totalWeeks: records.length,
                                               successRate: successRate,
                                               currentWeekSuccess: currentWeekSuccess,
@@ -248,27 +264,39 @@ jobs:
                                           currentWeekSuccess = records[records.length - 1].success;
                                       }
                                       
-                                      // 현재 연속 주차 및 최장 연속 주차 계산
+                                      // 현재 연속 주차 및 기간 계산
                                       let maxStreak = 0;
                                       currentStreak = 0;
                                       let tempStreak = 0;
+                                      let currentStreakStart = null;
+                                      let maxStreakStart = null;
+                                      let maxStreakEnd = null;
+                                      let tempStreakStart = null;
                                       
-                                      // 최신부터 역순으로 현재 연속 계산
-                                      for (let i = 0; i < records.length; i++) {
+                                      // 최신부터 역순으로 현재 연속 계산 (records는 오래된 것부터 순서)
+                                      for (let i = records.length - 1; i >= 0; i--) {
                                           if (records[i].success) {
-                                              if (i === 0) currentStreak++;
-                                              else if (currentStreak === i) currentStreak++;
-                                              else break;
+                                              currentStreak++;
+                                              // 첫 번째 성공 기록의 시작일을 저장 (역순이므로 마지막에 저장되는 것이 시작일)
+                                              currentStreakStart = records[i].period ? records[i].period.split(' ~ ')[0] : null;
                                           } else {
                                               break;
                                           }
                                       }
                                       
                                       // 전체에서 최장 연속 계산
-                                      for (const record of records) {
+                                      for (let i = 0; i < records.length; i++) {
+                                          const record = records[i];
                                           if (record.success) {
+                                              if (tempStreak === 0) {
+                                                  tempStreakStart = record.period ? record.period.split(' ~ ')[0] : null;
+                                              }
                                               tempStreak++;
-                                              maxStreak = Math.max(maxStreak, tempStreak);
+                                              if (tempStreak > maxStreak) {
+                                                  maxStreak = tempStreak;
+                                                  maxStreakStart = tempStreakStart;
+                                                  maxStreakEnd = record.period ? record.period.split(' ~ ')[1] : null;
+                                              }
                                           } else {
                                               tempStreak = 0;
                                           }
@@ -284,7 +312,10 @@ jobs:
                                           avatarUrl: fork.owner.avatar_url,
                                           lastPushed: fork.pushed_at,
                                           currentStreak,
+                                          currentStreakStart,
                                           maxStreak,
+                                          maxStreakStart,
+                                          maxStreakEnd,
                                           totalWeeks,
                                           successRate,
                                           currentWeekSuccess,
