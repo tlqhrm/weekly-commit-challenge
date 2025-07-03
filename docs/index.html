@@ -61,15 +61,32 @@
 
     <!-- Cache busting redirect script -->
     <script>
-      // URL에 타임스탬프가 없으면 자동으로 리다이렉트
+      // URL 타임스탬프 검사 및 자동 리다이렉트
       (function() {
         const urlParams = new URLSearchParams(window.location.search);
-        const hasTimestamp = urlParams.has('t');
+        const timestampParam = urlParams.get('t');
+        const currentTimestamp = Math.floor(Date.now() / 1000); // 현재 유닉스 타임스탬프
+        const tenMinutesInSeconds = 10 * 60; // 10분 = 600초
         
-        if (!hasTimestamp) {
-          const timestamp = Math.floor(Date.now() / 1000); // Unix timestamp
-          const currentUrl = window.location.href.split('?')[0]; // Remove existing params
-          const newUrl = currentUrl + '?t=' + timestamp;
+        let needsRedirect = false;
+        
+        if (!timestampParam) {
+          // 타임스탬프가 없으면 리다이렉트
+          needsRedirect = true;
+        } else {
+          // 타임스탬프가 있으면 10분 이상 차이나는지 확인
+          const urlTimestamp = parseInt(timestampParam);
+          const timeDifference = Math.abs(currentTimestamp - urlTimestamp);
+          
+          if (timeDifference > tenMinutesInSeconds) {
+            // 10분 이상 차이나면 리다이렉트
+            needsRedirect = true;
+          }
+        }
+        
+        if (needsRedirect) {
+          const currentUrl = window.location.href.split('?')[0]; // 기존 파라미터 제거
+          const newUrl = currentUrl + '?t=' + currentTimestamp;
           
           // 리다이렉트 (브라우저 히스토리 남기지 않음)
           window.location.replace(newUrl);
