@@ -621,7 +621,8 @@ function displayRanking(filter, page = 1) {
             case 'success-rate':
                 const rateIcon = user.successRate >= 90 ? '🏆' : user.successRate >= 70 ? '⭐' : user.successRate >= 50 ? '👍' : '📈';
                 statColor = user.successRate >= 90 ? '#22c55e' : user.successRate >= 70 ? '#3b82f6' : user.successRate >= 50 ? '#f59e0b' : '#ef4444';
-                mainStat = `${rateIcon} 성공률: <span style="color: ${statColor}; font-weight: 700;">${user.successRate}%</span>`;
+                const successWeeks = Math.round((user.successRate / 100) * user.totalWeeks);
+                mainStat = `${rateIcon} 성공률: <span style="color: ${statColor}; font-weight: 700;">${user.successRate}%</span> <span style="color: #94a3b8; font-size: 0.9em;">(${successWeeks}/${user.totalWeeks}주)</span>`;
                 break;
             case 'max-streak':
                 const maxIcon = (user.maxStreak || 0) >= 20 ? '👑' : (user.maxStreak || 0) >= 10 ? '🎖️' : (user.maxStreak || 0) >= 5 ? '🏅' : '📊';
@@ -716,7 +717,8 @@ function displayCachedRanking(filter, page = 1) {
             case 'success-rate':
                 const rateIcon = user.successRate >= 90 ? '🏆' : user.successRate >= 70 ? '⭐' : user.successRate >= 50 ? '👍' : '📈';
                 statColor = user.successRate >= 90 ? '#22c55e' : user.successRate >= 70 ? '#3b82f6' : user.successRate >= 50 ? '#f59e0b' : '#ef4444';
-                mainStat = `${rateIcon} 성공률: <span style="color: ${statColor}; font-weight: 700;">${user.successRate}%</span>`;
+                const successWeeks = Math.round((user.successRate / 100) * user.totalWeeks);
+                mainStat = `${rateIcon} 성공률: <span style="color: ${statColor}; font-weight: 700;">${user.successRate}%</span> <span style="color: #94a3b8; font-size: 0.9em;">(${successWeeks}/${user.totalWeeks}주)</span>`;
                 break;
             case 'max-streak':
                 const maxIcon = (user.maxStreak || 0) >= 20 ? '👑' : (user.maxStreak || 0) >= 10 ? '🎖️' : (user.maxStreak || 0) >= 5 ? '🏅' : '📊';

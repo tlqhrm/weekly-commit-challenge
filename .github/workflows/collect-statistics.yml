@@ -324,9 +324,14 @@ jobs:
                           .sort((a, b) => b.currentStreak - a.currentStreak)
                           .slice(0, 20); // 상위 20명만
                       
-                      // 랭킹 데이터 생성 (성공률 순)  
+                      // 랭킹 데이터 생성 (성공률 순, 성공률이 같으면 참여 주차 순)  
                       stats.rankingBySuccessRate = [...stats.participants]
-                          .sort((a, b) => b.successRate - a.successRate)
+                          .sort((a, b) => {
+                              if (b.successRate !== a.successRate) {
+                                  return b.successRate - a.successRate;
+                              }
+                              return b.totalWeeks - a.totalWeeks;
+                          })
                           .slice(0, 20); // 상위 20명만
                       
                       // 랭킹 데이터 생성 (최장 연속 주차 순)
