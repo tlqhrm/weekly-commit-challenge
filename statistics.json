@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2025-11-16T15:27:08.137Z",
+  "lastUpdated": "2025-11-16T15:35:18.474Z",
   "totalParticipants": 2,
   "activeParticipants": 0,
   "recordHolders": 0,
@@ -22,20 +22,20 @@
     {
       "username": "tlqhrm",
       "avatarUrl": "https://avatars.githubusercontent.com/u/85216782?u=bb6b168d27265e788e395fbed052b64e691c556c&v=4",
-      "lastPushed": "2025-11-16T15:16:20Z",
+      "lastPushed": "2025-11-16T15:32:15Z",
       "currentStreak": 0,
       "currentStreakStart": null,
       "maxStreak": 1,
       "maxStreakStart": "2025-06-30",
       "maxStreakEnd": "2025-07-06",
-      "totalWeeks": 20,
-      "successRate": 10,
+      "totalWeeks": 21,
+      "successRate": 9.5,
       "currentWeekSuccess": false,
       "currentWeekCommits": 0
     }
   ],
   "averageStreak": 0,
-  "averageSuccessRate": 7.5,
+  "averageSuccessRate": 7.3,
   "rankingByStreak": [
     {
       "username": "wjstls123",
@@ -54,14 +54,14 @@
     {
       "username": "tlqhrm",
       "avatarUrl": "https://avatars.githubusercontent.com/u/85216782?u=bb6b168d27265e788e395fbed052b64e691c556c&v=4",
-      "lastPushed": "2025-11-16T15:16:20Z",
+      "lastPushed": "2025-11-16T15:32:15Z",
       "currentStreak": 0,
       "currentStreakStart": null,
       "maxStreak": 1,
       "maxStreakStart": "2025-06-30",
       "maxStreakEnd": "2025-07-06",
-      "totalWeeks": 20,
-      "successRate": 10,
+      "totalWeeks": 21,
+      "successRate": 9.5,
       "currentWeekSuccess": false,
       "currentWeekCommits": 0
     }
@@ -70,14 +70,14 @@
     {
       "username": "tlqhrm",
       "avatarUrl": "https://avatars.githubusercontent.com/u/85216782?u=bb6b168d27265e788e395fbed052b64e691c556c&v=4",
-      "lastPushed": "2025-11-16T15:16:20Z",
+      "lastPushed": "2025-11-16T15:32:15Z",
       "currentStreak": 0,
       "currentStreakStart": null,
       "maxStreak": 1,
       "maxStreakStart": "2025-06-30",
       "maxStreakEnd": "2025-07-06",
-      "totalWeeks": 20,
-      "successRate": 10,
+      "totalWeeks": 21,
+      "successRate": 9.5,
       "currentWeekSuccess": false,
       "currentWeekCommits": 0
     },
@@ -114,14 +114,14 @@
     {
       "username": "tlqhrm",
       "avatarUrl": "https://avatars.githubusercontent.com/u/85216782?u=bb6b168d27265e788e395fbed052b64e691c556c&v=4",
-      "lastPushed": "2025-11-16T15:16:20Z",
+      "lastPushed": "2025-11-16T15:32:15Z",
       "currentStreak": 0,
       "currentStreakStart": null,
       "maxStreak": 1,
       "maxStreakStart": "2025-06-30",
       "maxStreakEnd": "2025-07-06",
-      "totalWeeks": 20,
-      "successRate": 10,
+      "totalWeeks": 21,
+      "successRate": 9.5,
       "currentWeekSuccess": false,
       "currentWeekCommits": 0
     }
