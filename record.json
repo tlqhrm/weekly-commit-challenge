@@ -1,7 +1,7 @@
 {
   "username": "tlqhrm",
   "avatarUrl": "https://avatars.githubusercontent.com/u/85216782?u=bb6b168d27265e788e395fbed052b64e691c556c&v=4",
-  "lastUpdated": "2025-12-14T23:34:28+09:00",
+  "lastUpdated": "2025-12-15T00:33:31+09:00",
   "records": [
     {
       "id": 1,
@@ -242,6 +242,16 @@
       "success": false,
       "weekStart": "2025-12-08",
       "weekEnd": "2025-12-14"
+    },
+    {
+      "id": 25,
+      "period": "12/15 ~ 12/21",
+      "week": "2025년 50주차",
+      "commits": 0,
+      "status": "❌ 실패",
+      "success": false,
+      "weekStart": "2025-12-15",
+      "weekEnd": "2025-12-21"
     }
   ]
 }
