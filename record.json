@@ -1,7 +1,7 @@
 {
   "username": "tlqhrm",
   "avatarUrl": "https://avatars.githubusercontent.com/u/85216782?u=bb6b168d27265e788e395fbed052b64e691c556c&v=4",
-  "lastUpdated": "2026-04-26T23:43:43+09:00",
+  "lastUpdated": "2026-04-27T00:43:45+09:00",
   "records": [
     {
       "id": 1,
@@ -432,6 +432,16 @@
       "success": false,
       "weekStart": "2026-04-20",
       "weekEnd": "2026-04-26"
+    },
+    {
+      "id": 44,
+      "period": "04/27 ~ 05/03",
+      "week": "2026년 17주차",
+      "commits": 0,
+      "status": "❌ 실패",
+      "success": false,
+      "weekStart": "2026-04-27",
+      "weekEnd": "2026-05-03"
     }
   ]
 }
